@@ -1,0 +1,181 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Book {
+    private int id;
+    private String title;
+    private String author;
+    private String category;
+
+    public Book(int id, String title, String author, String category) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.category = category;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+}
+
+class User {
+    private String email;
+    private List<Book> booksBorrowed;
+
+    public User(String email) {
+        this.email = email;
+        booksBorrowed = new ArrayList<>();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public List<Book> getBooksBorrowed() {
+        return booksBorrowed;
+    }
+}
+
+   class DigitalLibrary {
+    private List<Book> books;
+    private List<User> users;
+
+    public DigitalLibrary() {
+        books = new ArrayList<>();
+        users = new ArrayList<>();
+    }
+
+    public void addBook(String title, String author, String category) {
+        int id = books.size() + 1;
+        Book book = new Book(id, title, author, category);
+        books.add(book);
+        System.out.println("Book added successfully.");
+    }
+
+    public void updateBook(int bookId, String title, String author, String category) {
+        for (Book book : books) {
+            if (book.getId() == bookId) {
+                book = new Book(bookId, title, author, category);
+                System.out.println("Book updated successfully.");
+                return;
+            }
+        }
+        System.out.println("Book not found.");
+    }
+
+    public void deleteBook(int bookId) {
+        for (Book book : books) {
+            if (book.getId() == bookId) {
+                books.remove(book);
+                System.out.println("Book deleted successfully.");
+                return;
+            }
+        }
+        System.out.println("Book not found.");
+    }
+
+    public void viewBooks() {
+        for (Book book : books) {
+            System.out.println("ID: " + book.getId() + ", Title: " + book.getTitle() + ", Author: " + book.getAuthor() + ", Category: " + book.getCategory());
+        }
+    }
+
+    public void searchBooksByCategory(String category) {
+        boolean found = false;
+        for (Book book : books) {
+            if (book.getCategory().equalsIgnoreCase(category)) {
+                System.out.println("ID: " + book.getId() + ", Title: " + book.getTitle() + ", Author: " + book.getAuthor() + ", Category: " + book.getCategory());
+                found = true;
+            }
+        }
+        if (!found) {
+            System.out.println("No books found in the specified category.");
+        }
+    }
+
+    public static void main(String[] args) {
+        DigitalLibrary library = new DigitalLibrary();
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.println("Digital Library Management System");
+            System.out.println("1. Admin Module");
+            System.out.println("2. User Module");
+            System.out.println("3. Quit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                System.out.println("Admin Module");
+                System.out.println("1. Add Book");
+                System.out.println("2. Update Book");
+                System.out.println("3. Delete Book");
+                System.out.print("Enter your choice: ");
+                int adminChoice = scanner.nextInt();
+
+                if (adminChoice == 1) {
+                    System.out.print("Enter book title: ");
+                    String title = scanner.next();
+                    System.out.print("Enter author: ");
+                    String author = scanner.next();
+                    System.out.print("Enter category: ");
+                    String category = scanner.next();
+                    library.addBook(title, author, category);
+                } else if (adminChoice == 2) {
+                    System.out.print("Enter the book ID to update: ");
+                    int bookId = scanner.nextInt();
+                    System.out.print("Enter updated title: ");
+                    String title = scanner.next();
+                    System.out.print("Enter updated author: ");
+                    String author = scanner.next();
+                    System.out.print("Enter updated category: ");
+                    String category = scanner.next();
+                    library.updateBook(bookId, title, author, category);
+                } else if (adminChoice == 3) {
+                    System.out.print("Enter the book ID to delete: ");
+                    int bookId = scanner.nextInt();
+                    library.deleteBook(bookId);
+                } else {
+                    System.out.println("Invalid choice.");
+                }
+            } else if (choice == 2) {
+                System.out.println("User Module");
+                System.out.println("1. View Books");
+                System.out.println("2. Search Books by Category");
+                System.out.print("Enter your choice: ");
+                int userChoice = scanner.nextInt();
+
+                if (userChoice == 1) {
+                    library.viewBooks();
+                } else if (userChoice == 2) {
+                    System.out.print("Enter category to search: ");
+                    String category = scanner.next();
+                    library.searchBooksByCategory(category);
+                } else {
+                    System.out.println("Invalid choice.");
+                }
+            } else if (choice == 3) {
+                System.out.println("Goodbye!");
+                break;
+            } else {
+                System.out.println("Invalid choice.");
+            }
+        }
+
+        scanner.close();
+    }
+}
